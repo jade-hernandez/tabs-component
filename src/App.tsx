@@ -3,7 +3,7 @@ import tabsData from "./data/tabs-data";
 
 function App() {
   return (
-    <main className='mx-auto flex min-h-screen w-full min-w-dvw flex-col items-center justify-center'>
+    <main className='mx-auto mt-50 flex min-h-screen w-full min-w-dvw flex-col items-center'>
       <TabsComponent tabs={tabsData} />
     </main>
   );

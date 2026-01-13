@@ -7,7 +7,6 @@ const buttonStyles: { [key: string]: string } = {
   selected: "text-indigo-700 border-0 mb-[0.5px]"
 };
 
-// Animation variants for tab panels
 const panelVariants: Variants = {
   hidden: {
     opacity: 0,
@@ -18,7 +17,7 @@ const panelVariants: Variants = {
     y: 0,
     transition: {
       duration: 0.3,
-      ease: [0.4, 0, 0.2, 1] // Material Design easing curve
+      ease: [0.4, 0, 0.2, 1]
     }
   },
   exit: {
@@ -101,7 +100,6 @@ const TabsComponent = ({ tabs }: { tabs: ITabs }) => {
       aria-orientation='horizontal'
       className='w-75'
     >
-      {/* Tab buttons container with animated indicator */}
       <div className='relative flex w-full flex-row items-center justify-between'>
         {tabsArray.map((tab, index) => (
           <button
@@ -118,7 +116,6 @@ const TabsComponent = ({ tabs }: { tabs: ITabs }) => {
           >
             {tab.label}
 
-            {/* Animated bottom border indicator */}
             {tab.id === activeTab && (
               <motion.div
                 layoutId='activeTabIndicator'
@@ -130,7 +127,6 @@ const TabsComponent = ({ tabs }: { tabs: ITabs }) => {
         ))}
       </div>
 
-      {/* Animated tab panels */}
       <div className='relative mt-4'>
         <AnimatePresence mode='wait'>
           {tabsArray.map(
