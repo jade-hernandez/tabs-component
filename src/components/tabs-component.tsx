@@ -127,7 +127,7 @@ const TabsComponent = ({ tabs }: { tabs: ITabs }) => {
         ))}
       </div>
 
-      <div className='relative mt-4'>
+      <div className='relative mt-6'>
         <AnimatePresence mode='wait'>
           {tabsArray.map(
             tab =>
