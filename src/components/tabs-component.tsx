@@ -110,7 +110,7 @@ const TabsComponent = ({ tabs }: { tabs: ITabs }) => {
             tabIndex={index === activeIndex ? 0 : -1}
             aria-selected={tab.id === activeTab}
             aria-controls={`tabpanel-${tab.id}`}
-            className={`relative w-full cursor-pointer px-2 pb-3 text-left text-base font-medium transition-colors duration-200 ease-in-out hover:border-indigo-800 hover:text-indigo-800 focus:text-indigo-800 ${tab.id === activeTab ? "active" : ""} ${buttonStyles[tab.id === activeTab ? "selected" : "base"]}`}
+            className={`relative w-full cursor-pointer px-2 pb-3 text-left text-base font-medium transition-colors duration-200 ease-in-out hover:border-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none ${tab.id === activeTab ? "active" : ""} ${buttonStyles[tab.id === activeTab ? "selected" : "base"]}`}
             onClick={() => handleClick(tab.id)}
             onKeyDown={e => handleKeyDown(e, index)}
           >
