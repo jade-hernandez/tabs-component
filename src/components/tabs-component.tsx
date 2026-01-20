@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { motion, AnimatePresence, type Variants } from "motion/react";
-import type { ITabs } from "../types";
+import type { ITab } from "../types";
 
 const buttonStyles: { [key: string]: string } = {
   base: "text-neutral-600 border-neutral-300 border-b",
-  selected: "text-indigo-700 border-0 mb-[0.5px]"
+  selected: "text-indigo-700 border-b border-transparent"
 };
 
 const panelVariants: Variants = {
@@ -27,15 +27,14 @@ const panelVariants: Variants = {
   }
 };
 
-const TabsComponent = ({ tabs }: { tabs: ITabs }) => {
+const TabsComponent = ({ tabs, className }: { tabs: ITab[]; className?: string }) => {
   const [activeTab, setActiveTab] = useState<string>(() => {
-    const firstTab = Object.values(tabs)[0];
-    return firstTab?.id ?? "";
+    return tabs[0]?.id ?? "";
   });
+
   const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const tabsArray = Object.values(tabs);
-  const activeIndex = tabsArray.findIndex(tab => tab.id === activeTab);
+  const activeIndex = tabs.findIndex(tab => tab.id === activeTab);
 
   useEffect(() => {
     if (activeIndex !== -1 && tabsRef.current[activeIndex]) {
@@ -43,15 +42,9 @@ const TabsComponent = ({ tabs }: { tabs: ITabs }) => {
     }
   }, [activeTab, activeIndex]);
 
-  const setTabRef = useCallback((el: HTMLButtonElement | null, index: number) => {
-    if (el) {
-      tabsRef.current[index] = el;
-    }
-  }, []);
-
   const handleKeyDown = useCallback(
     (e: KeyboardEvent, index: number) => {
-      const total = tabsArray.length;
+      const total = tabs.length;
       let newIndex: number | undefined;
 
       switch (e.key) {
@@ -76,42 +69,42 @@ const TabsComponent = ({ tabs }: { tabs: ITabs }) => {
         case "Enter":
         case " ":
           e.preventDefault();
-          setActiveTab(tabsArray[index].id);
+          setActiveTab(tabs[index].id);
           return;
       }
 
       if (newIndex !== undefined && newIndex !== index) {
         e.preventDefault();
         tabsRef.current[newIndex]?.focus();
-        setActiveTab(tabsArray[newIndex].id);
+        setActiveTab(tabs[newIndex].id);
       }
     },
-    [tabsArray]
+    [tabs]
   );
 
-  const handleClick = useCallback((tabId: string) => {
-    setActiveTab(tabId);
-  }, []);
-
   return (
-    <div
-      role='tablist'
-      aria-label='Account settings'
-      aria-orientation='horizontal'
-      className='w-75'
-    >
-      <div className='relative flex w-full flex-row items-center justify-between'>
-        {tabsArray.map((tab, index) => (
+    <div className={className}>
+      <div
+        role='tablist'
+        aria-label='Account settings'
+        aria-orientation='horizontal'
+        className='relative flex flex-row items-center justify-between'
+      >
+        {tabs.map((tab, index) => (
           <button
             key={tab.id}
-            ref={el => setTabRef(el, index)}
+            ref={el => {
+              if (el) {
+                tabsRef.current[index] = el;
+              }
+            }}
             id={`tab-${tab.id}`}
             role='tab'
             tabIndex={index === activeIndex ? 0 : -1}
             aria-selected={tab.id === activeTab}
             aria-controls={`tabpanel-${tab.id}`}
             className={`relative w-full cursor-pointer px-2 pb-3 text-left text-base font-medium transition-colors duration-200 ease-in-out hover:border-indigo-800 hover:text-indigo-800 focus:text-indigo-800 focus:outline-none ${tab.id === activeTab ? "active" : ""} ${buttonStyles[tab.id === activeTab ? "selected" : "base"]}`}
-            onClick={() => handleClick(tab.id)}
+            onClick={() => setActiveTab(tab.id)}
             onKeyDown={e => handleKeyDown(e, index)}
           >
             {tab.label}
@@ -126,10 +119,9 @@ const TabsComponent = ({ tabs }: { tabs: ITabs }) => {
           </button>
         ))}
       </div>
-
       <div className='relative mt-6'>
         <AnimatePresence mode='wait'>
-          {tabsArray.map(
+          {tabs.map(
             tab =>
               tab.id === activeTab && (
                 <motion.div

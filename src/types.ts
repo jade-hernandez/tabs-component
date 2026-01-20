@@ -3,5 +3,3 @@ export interface ITab {
   label: string;
   content: React.ReactNode;
 }
-
-export type ITabs = Record<string, ITab>;
